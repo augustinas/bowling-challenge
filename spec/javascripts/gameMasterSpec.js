@@ -9,4 +9,8 @@ describe('Game engine keeps track of', function() {
   it('total score is 0 at the beginning', function() {
     expect(gm.totalScore).toEqual(0);
   });
+
+  it('tracks outcome of each roll', function() {
+    expect(gm.scores).toEqual([]);
+  });
 });
