@@ -32,4 +32,14 @@ describe('Game engine', function() {
     expect(gm.frameScores).toEqual([[6, 4, 7], [7, 1]]);
     expect(gm.frameStatus).toEqual(['ok', 'ok']);
   });
+
+  it('recognizes strikes and adds extra points', function() {
+    gm.roll(10);
+    expect(gm.frameScores).toEqual([[10, null]]);
+    expect(gm.frameStatus).toEqual(['strike']);
+    gm.roll(3);
+    gm.roll(5);
+    expect(gm.frameScores).toEqual([[10, null, 3, 5], [3, 5]]);
+    expect(gm.frameStatus).toEqual(['ok', 'ok']);
+  });
 });
