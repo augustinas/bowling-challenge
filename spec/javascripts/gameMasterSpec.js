@@ -1,4 +1,4 @@
-describe('Game engine keeps track of', function() {
+describe('Game engine', function() {
 
   var gm;
 
@@ -6,26 +6,30 @@ describe('Game engine keeps track of', function() {
     gm = new GameMaster();
   });
 
-  it('tracks outcome of each roll', function() {
-    expect(gm.scores).toEqual([]);
+  it('keeps track of frame results and frame status', function() {
+    expect(gm.frameScores).toEqual([]);
+    expect(gm.frameStatus).toEqual([]);
   });
 
-  it('adds a new score', function() {
+  it('adds a new scores', function() {
     gm.roll(5);
-    expect(gm.scores).toEqual([[5]]);
+    expect(gm.frameScores).toEqual([[5]]);
     gm.roll(4);
-    expect(gm.scores).toEqual([[5, 4]]);
+    expect(gm.frameScores).toEqual([[5, 4]]);
     gm.roll(3);
     gm.roll(6);
-    expect(gm.scores).toEqual([[5,4], [3, 6]]);
+    expect(gm.frameScores).toEqual([[5, 4], [3, 6]]);
+    expect(gm.frameStatus).toEqual(['ok', 'ok']);
   });
 
-  it('adds total scores for each frame', function() {
-    expect(gm.totalScores).toEqual([]);
-    gm.roll(5);
-    gm.roll(4);
-    gm.roll(3);
+  it('recognizes spares and adds extra points', function() {
     gm.roll(6);
-    expect(gm.totalScores).toEqual([9, 9]);
+    gm.roll(4);
+    expect(gm.frameScores).toEqual([[6, 4]]);
+    expect(gm.frameStatus).toEqual(['spare']);
+    gm.roll(7);
+    gm.roll(1);
+    expect(gm.frameScores).toEqual([[6, 4, 7], [7, 1]]);
+    expect(gm.frameStatus).toEqual(['ok', 'ok']);
   });
 });

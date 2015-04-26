@@ -1,22 +1,42 @@
 var GameMaster = function() {
-  this.totalScores = [];
   this.currentFrame = 1;
-  this.scores = [];
+  this.currentRoll = 1;
+  this.frameScores = [];
+  this.frameStatus = [];
 }
 
 GameMaster.prototype.roll = function(pinsDown) {
-  if (!this.scores[this.currentFrame - 1]) {
-    this.scores.push([pinsDown]);
+  if (this.currentRoll === 1) {
+    this.frameScores.push([pinsDown]);
+    this.currentRoll += 1;
   } else {
-    this.scores[this.currentFrame - 1].push(pinsDown);
-    this.addFrameScore();
+    this.currentRoll = 1;
+    this.frameScores[this.currentFrame - 1].push(pinsDown);
+    this.checkStatus(this.currentFrame);
+    this.extraPointsCleaner();
     this.currentFrame += 1;
   }
 };
 
-GameMaster.prototype.addFrameScore = function() {
-  var frameScore = this.scores[this.currentFrame - 1].reduce(function(a, b) {
+GameMaster.prototype.frameScore = function(frameNum) {
+  return this.frameScores[frameNum - 1].reduce(function(a, b) {
     return a + b;
   });
-  this.totalScores.push(frameScore);
+};
+
+GameMaster.prototype.checkStatus = function(frameNum) {
+  if (this.frameScore(frameNum) === 10) {
+    this.frameStatus[frameNum - 1] = 'spare';
+  } else {
+    this.frameStatus[frameNum - 1] = 'ok';
+  }
+};
+
+GameMaster.prototype.extraPointsCleaner = function() {
+  for (i = 0; i < this.frameScores.length; i++) {
+    if (this.frameStatus[i] === 'spare' && this.frameScores[i + 1]) {
+      this.frameScores[i].push(this.frameScores[i + 1][0]);
+      this.frameStatus[i] = 'ok';
+    }
+  }
 };
