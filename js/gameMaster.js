@@ -1,5 +1,5 @@
 var GameMaster = function() {
-  this.totalScore = 0;
+  this.totalScores = [];
   this.currentFrame = 1;
   this.scores = [];
 }
@@ -9,6 +9,14 @@ GameMaster.prototype.roll = function(pinsDown) {
     this.scores.push([pinsDown]);
   } else {
     this.scores[this.currentFrame - 1].push(pinsDown);
+    this.addFrameScore();
     this.currentFrame += 1;
   }
+};
+
+GameMaster.prototype.addFrameScore = function() {
+  var frameScore = this.scores[this.currentFrame - 1].reduce(function(a, b) {
+    return a + b;
+  });
+  this.totalScores.push(frameScore);
 };
