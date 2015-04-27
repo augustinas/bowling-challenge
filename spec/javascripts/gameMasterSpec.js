@@ -42,4 +42,13 @@ describe('Game engine', function() {
     expect(gm.frameScores).toEqual([[10, null, 3, 5], [3, 5]]);
     expect(gm.frameStatus).toEqual(['ok', 'ok']);
   });
+
+  it('can deal with several strikes in a row', function() {
+    gm.roll(10);
+    gm.roll(10);
+    gm.roll(5);
+    gm.roll(3);
+    expect(gm.frameScores).toEqual([10, null, 10, 5], [10, null, 5, 3], [5, 3]);
+    expect(gm.frameStatus).toEqual(['ok', 'ok', 'ok']);
+  });
 });
